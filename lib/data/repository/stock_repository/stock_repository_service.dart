@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:stock_app/data/model/stock_dto.dart';
 
 import 'package:stock_app/data/repository/stock_repository/stock_repository.dart';
 import 'package:stock_app/domain/model/stock.dart';
+
+import '../../dto/stock_dto.dart';
 
 class StockRepositoryService implements StockRepository {
   final _token = 'pk_0e64607a9fec4dd5a35f4d4e3e799e1c';
@@ -23,5 +24,14 @@ class StockRepositoryService implements StockRepository {
     } else {
       return [];
     }
+  }
+
+  @override
+  Future<Stock> getBySymbol(String symbol) async {
+    final response = await _dio.get(
+      '/stable/stock/$symbol/quote/',
+      queryParameters: {'token': _token},
+    );
+    return StockDTO.fromJson(response.data).toModel();
   }
 }

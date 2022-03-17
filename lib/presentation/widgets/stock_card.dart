@@ -5,10 +5,14 @@ import '../../domain/model/stock.dart';
 class StockCard extends StatelessWidget {
   const StockCard({
     required this.stock,
+    this.onFavouriteTaped,
+    this.isFavourite = false,
     Key? key,
   }) : super(key: key);
 
   final Stock stock;
+  final Function()? onFavouriteTaped;
+  final bool isFavourite;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,7 +22,7 @@ class StockCard extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -45,6 +49,15 @@ class StockCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  IconButton(
+                    onPressed: onFavouriteTaped,
+                    icon: isFavourite
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          )
+                        : const Icon(Icons.favorite_border),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Text(

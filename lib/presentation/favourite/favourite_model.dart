@@ -1,25 +1,17 @@
 import 'package:elementary/elementary.dart';
-import 'package:flutter/material.dart';
-import 'package:stock_app/data/repository/favourite_repository/favourite_repository.dart';
-import 'package:stock_app/data/repository/stock_repository/stock_repository.dart';
-import 'package:stock_app/domain/model/stock.dart';
+import 'package:flutter/widgets.dart';
 
-class HomeModel extends ElementaryModel {
-  final ValueNotifier<List<Stock>> _stocks = ValueNotifier([]);
-  final ValueNotifier<List<Stock>> _favourite = ValueNotifier([]);
+import '../../data/repository/favourite_repository/favourite_repository.dart';
+import '../../data/repository/stock_repository/stock_repository.dart';
+import '../../domain/model/stock.dart';
+
+class FavouriteModel extends ElementaryModel {
   final StockRepository _stockRepository;
   final FavouriteRepository _favouriteRepository;
 
-  HomeModel(
-    this._stockRepository,
-    this._favouriteRepository,
-  );
+  final ValueNotifier<List<Stock>> _favourite = ValueNotifier([]);
 
-  void loadStocks() {
-    _stockRepository.getTop20Stocks().then((value) {
-      return _stocks.value = value;
-    });
-  }
+  FavouriteModel(this._stockRepository, this._favouriteRepository);
 
   Future<void> loadFavourite() async {
     final favouritesDTO = await _favouriteRepository.getAll();
@@ -41,6 +33,5 @@ class HomeModel extends ElementaryModel {
     return loadFavourite();
   }
 
-  ValueNotifier<List<Stock>> get stocks => _stocks;
   ValueNotifier<List<Stock>> get favourite => _favourite;
 }
