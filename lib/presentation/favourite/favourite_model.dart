@@ -28,8 +28,8 @@ class FavouriteModel extends ElementaryModel {
   }
 
   Future<void> addToFavourite(Stock stock) async {
-    _favouriteRepository.addStock(stock);
     _favourite.add(stock);
+    _favouriteRepository.addStock(stock);
   }
 
   Future<void> removeFromFavourite(Stock stock) async {
