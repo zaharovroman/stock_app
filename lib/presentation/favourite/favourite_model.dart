@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:elementary/elementary.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,29 +11,31 @@ class FavouriteModel extends ElementaryModel {
   final StockRepository _stockRepository;
   final FavouriteRepository _favouriteRepository;
 
-  final ValueNotifier<List<Stock>> _favourite = ValueNotifier([]);
+  final List<Stock> _favourite = [];
 
   FavouriteModel(this._stockRepository, this._favouriteRepository);
 
-  Future<void> loadFavourite() async {
+  Future<List<Stock>> loadFavourite() async {
     final favouritesDTO = await _favouriteRepository.getAll();
     final favourites = <Stock>[];
     for (var element in favouritesDTO) {
       final stock = await _stockRepository.getBySymbol(element.symbol);
       favourites.add(stock);
     }
-    _favourite.value = favourites;
+    _favourite.clear();
+    _favourite.addAll(favourites);
+    return favourites;
   }
 
   Future<void> addToFavourite(Stock stock) async {
-    await _favouriteRepository.addStock(stock);
-    return loadFavourite();
+    _favouriteRepository.addStock(stock);
+    _favourite.add(stock);
   }
 
   Future<void> removeFromFavourite(Stock stock) async {
-    await _favouriteRepository.removeStock(stock);
-    return loadFavourite();
+    _favourite.removeWhere((element) => element.symbol == stock.symbol);
+    _favouriteRepository.removeStock(stock);
   }
 
-  ValueNotifier<List<Stock>> get favourite => _favourite;
+  List<Stock> get favourite => _favourite;
 }

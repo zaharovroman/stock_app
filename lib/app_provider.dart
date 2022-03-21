@@ -7,6 +7,7 @@ import 'package:stock_app/data/repository/favourite_repository/favourite_reposit
 import 'package:stock_app/data/repository/favourite_repository/favourite_repository_box.dart';
 import 'package:stock_app/data/repository/stock_repository/stock_repository.dart';
 import 'package:stock_app/data/repository/stock_repository/stock_repository_service.dart';
+import 'package:stock_app/data/repository/stock_repository/stock_service_options.dart';
 
 class AppProvider extends StatelessWidget {
   const AppProvider({
@@ -24,14 +25,16 @@ class AppProvider extends StatelessWidget {
           create: (context) => StockRepositoryService(
             Dio(
               BaseOptions(
-                baseUrl: 'https://cloud.iexapis.com',
+                baseUrl: StockServiceOptions.baseUrl,
               ),
             ),
           ),
         ),
         Provider<FavouriteRepository>(
           create: (context) {
-            return FavouriteRepositoryBox(Hive.box(Boxes.favourite));
+            return FavouriteRepositoryBox(
+              Hive.box(Boxes.favourite),
+            );
           },
         ),
       ],

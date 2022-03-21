@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stock_app/presentation/style/app_colors.dart';
 
 import '../../domain/model/stock.dart';
+import '../style/fonts.dart';
 
 class StockCard extends StatelessWidget {
   const StockCard({
@@ -11,7 +13,7 @@ class StockCard extends StatelessWidget {
   }) : super(key: key);
 
   final Stock stock;
-  final Function()? onFavouriteTaped;
+  final VoidCallback? onFavouriteTaped;
   final bool isFavourite;
   @override
   Widget build(BuildContext context) {
@@ -34,13 +36,13 @@ class StockCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Text(
                       stock.name,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      style: Fonts.stockTitle,
                       softWrap: true,
                     ),
                   ),
                   Text(
                     stock.symbol,
-                    style: const TextStyle(color: Colors.grey),
+                    style: Fonts.stockSymbol,
                   ),
                 ],
               ),
@@ -54,7 +56,7 @@ class StockCard extends StatelessWidget {
                     icon: isFavourite
                         ? const Icon(
                             Icons.favorite,
-                            color: Colors.red,
+                            color: AppColors.favouriteColor,
                           )
                         : const Icon(Icons.favorite_border),
                   ),
@@ -62,16 +64,13 @@ class StockCard extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Text(
                       '${stock.value.toString()} ${stock.currency}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Fonts.stockTitle,
                     ),
                   ),
                   Text(
                     '${stock.change} ${stock.currency} (${stock.changePercent}%)',
                     style: TextStyle(
-                      color: stock.changePercent > 0 ? Colors.green : Colors.red,
+                      color: stock.changePercent > 0 ? AppColors.stockUp : AppColors.stockDown,
                     ),
                   )
                 ],

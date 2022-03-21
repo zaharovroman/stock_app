@@ -25,7 +25,10 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.dark,
       ),
       home: Scaffold(
-        body: widget.tabs[_currentTab],
+        body: IndexedStack(
+          index: _currentTab,
+          children: widget.tabs,
+        ),
         bottomNavigationBar: Builder(
           builder: (context) {
             return BottomNavigationBar(
@@ -38,7 +41,7 @@ class _MyAppState extends State<MyApp> {
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.list),
-                  label: 'List',
+                  label: 'Gainers',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite),

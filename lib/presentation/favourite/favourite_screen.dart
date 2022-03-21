@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:stock_app/presentation/favourite/favourite_wm.dart';
 
 import '../../domain/model/stock.dart';
+import '../widgets/error_screen.dart';
+import '../widgets/loading_screen.dart';
 import '../widgets/stock_card.dart';
 
 class FavouriteScreen extends ElementaryWidget<FavouriteWM> {
@@ -15,14 +17,16 @@ class FavouriteScreen extends ElementaryWidget<FavouriteWM> {
 
   @override
   Widget build(FavouriteWM wm) {
-    return ValueListenableBuilder<List<Stock>>(
-      valueListenable: wm.favourite,
-      builder: (context, favourite, child) {
+    return EntityStateNotifierBuilder<List<Stock>>(
+      listenableEntityState: wm.favourite,
+      errorBuilder: (context, exception, data) => const ErrorScreen(),
+      loadingBuilder: (context, data) => const LoadingScreen(),
+      builder: (context, favourite) {
         return Stack(
           children: [
             ListView.builder(
               itemBuilder: (context, index) {
-                final stock = favourite[index];
+                final stock = favourite![index];
                 return StockCard(
                   stock: stock,
                   onFavouriteTaped: () {
@@ -31,7 +35,7 @@ class FavouriteScreen extends ElementaryWidget<FavouriteWM> {
                   isFavourite: favourite.any((element) => element.symbol == stock.symbol),
                 );
               },
-              itemCount: favourite.length,
+              itemCount: favourite!.length,
             ),
           ],
         );

@@ -6,10 +6,10 @@ import 'package:stock_app/data/dto/favourite_stock_dto.dart';
 import 'package:stock_app/data/repository/boxes.dart';
 import 'package:stock_app/presentation/app/app.dart';
 
+import 'data/repository/favourite_repository/favourite_repository_box.dart';
+
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(FavouriteStockDTOAdapter());
-  await Hive.openBox<FavouriteStockDTO>(Boxes.favourite);
+  await FavouriteRepositoryBox.init();
   runApp(
     const AppProvider(
       child: MyApp(),

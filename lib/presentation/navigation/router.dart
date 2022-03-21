@@ -20,7 +20,4 @@ class StockRouter {
       )
     ],
   );
-
-  // RouterDelegate get routerDelegate => _goRouter.routerDelegate;
-  // RouteInformationParser get informationParser => _goRouter.routeInformationParser;
 }
