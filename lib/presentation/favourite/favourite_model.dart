@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:elementary/elementary.dart';
-import 'package:flutter/widgets.dart';
-
 import '../../data/repository/favourite_repository/favourite_repository.dart';
 import '../../data/repository/stock_repository/stock_repository.dart';
 import '../../domain/model/stock.dart';

@@ -6,6 +6,8 @@ import 'package:stock_app/data/repository/favourite_repository/favourite_reposit
 import 'package:stock_app/data/repository/stock_repository/stock_repository.dart';
 import 'package:stock_app/domain/model/stock.dart';
 import 'package:stock_app/presentation/favourite/favourite_model.dart';
+import 'package:stock_app/presentation/favourite/favourite_wm.dart';
+import 'package:stock_app/presentation/home/home_model.dart';
 
 import 'unit_test.mocks.dart';
 
@@ -29,31 +31,32 @@ void main() {
       currency: 'USD',
     ),
   ];
+
+  final favouriteDTOList = <FavouriteStockDTO>[];
+  final stockMock = MockStockRepository();
+  final favouriteMock = MockFavouriteRepository();
+
+  when(stockMock.getTop20Stocks()).thenAnswer(
+    (_) => Future.value(testStocks),
+  );
+
+  when(favouriteMock.getAll()).thenAnswer((_) => Future.value(favouriteDTOList));
+  for (var element in testStocks) {
+    when(favouriteMock.addStock(element)).thenAnswer(
+      (realInvocation) async => favouriteDTOList.add(
+        FavouriteStockDTO(symbol: element.symbol),
+      ),
+    );
+    when(favouriteMock.removeStock(element)).thenAnswer(
+      (realInvocation) async => favouriteDTOList.remove(
+        FavouriteStockDTO(symbol: element.symbol),
+      ),
+    );
+    when(stockMock.getBySymbol(element.symbol)).thenAnswer((_) => Future.value(element));
+  }
   group(
     'FavouriteModel test',
     () {
-      final favouriteDTOList = <FavouriteStockDTO>[];
-      final stockMock = MockStockRepository();
-      final favouriteMock = MockFavouriteRepository();
-
-      when(stockMock.getTop20Stocks()).thenAnswer(
-        (_) => Future.value(testStocks),
-      );
-
-      when(favouriteMock.getAll()).thenAnswer((_) => Future.value(favouriteDTOList));
-      for (var element in testStocks) {
-        when(favouriteMock.addStock(element)).thenAnswer(
-          (realInvocation) async => favouriteDTOList.add(
-            FavouriteStockDTO(symbol: element.symbol),
-          ),
-        );
-        when(favouriteMock.removeStock(element)).thenAnswer(
-          (realInvocation) async => favouriteDTOList.remove(
-            FavouriteStockDTO(symbol: element.symbol),
-          ),
-        );
-        when(stockMock.getBySymbol(element.symbol)).thenAnswer((_) => Future.value(element));
-      }
       test(
         'Get all favourite',
         () async {
@@ -87,6 +90,36 @@ void main() {
           expect(model.favourite.contains(testStocks.first), true);
           await model.removeFromFavourite(testStocks.first);
           expect(model.favourite.contains(testStocks.first), false);
+        },
+      );
+    },
+  );
+
+  group(
+    'HomeModel tests',
+    () {
+      test(
+        'Load stocks',
+        () async {
+          final model = HomeModel(stockMock);
+          final stocks = await model.loadStocks();
+          for (var element in stocks) {
+            expect(testStocks.contains(element), true);
+          }
+        },
+      );
+    },
+  );
+
+  group(
+    'FavouriteWM tests',
+    () {
+      test(
+        'description',
+        () async {
+          final wm = FavouriteWM(
+            FavouriteModel(stockMock, favouriteMock),
+          );
         },
       );
     },
