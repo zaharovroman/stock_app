@@ -68,7 +68,7 @@ class StockCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${stock.change} ${stock.currency} (${stock.changePercent}%)',
+                    '${stock.change} ${stock.currency} (${_changePercent}%)',
                     style: TextStyle(
                       color: stock.changePercent > 0 ? AppColors.stockUp : AppColors.stockDown,
                     ),
@@ -81,4 +81,6 @@ class StockCard extends StatelessWidget {
       ),
     );
   }
+
+  String get _changePercent => (stock.changePercent * 100).toStringAsFixed(2);
 }
