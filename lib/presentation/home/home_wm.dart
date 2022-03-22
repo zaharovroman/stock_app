@@ -39,6 +39,23 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
     );
   }
 
+  Future<void> tapOnFavourite(Stock stock) async {
+    if (_favouriteModel.favourite.any((element) => element.symbol == stock.symbol)) {
+      await _favouriteModel.removeFromFavourite(stock);
+    } else {
+      await _favouriteModel.addToFavourite(stock);
+    }
+    _favourite.content(_favouriteModel.favourite);
+  }
+
+  Future<void> refresh() async {
+    _loadFavourite().then(
+      (value) {
+        _loadStocks();
+      },
+    );
+  }
+
   Future<void> _loadStocks() async {
     final previousStocks = _stocks.value?.data;
     _stocks.loading(previousStocks);
@@ -59,15 +76,6 @@ class HomeWM extends WidgetModel<HomeScreen, HomeModel> {
     } on Exception catch (e) {
       _favourite.error(e, previousFavourite);
     }
-  }
-
-  Future<void> tapOnFavourite(Stock stock) async {
-    if (_favouriteModel.favourite.any((element) => element.symbol == stock.symbol)) {
-      await _favouriteModel.removeFromFavourite(stock);
-    } else {
-      await _favouriteModel.addToFavourite(stock);
-    }
-    _favourite.content(_favouriteModel.favourite);
   }
 
   ListenableState<EntityState<List<Stock>>> get stocks => _stocks;
