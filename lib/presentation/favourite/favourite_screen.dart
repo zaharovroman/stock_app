@@ -22,22 +22,25 @@ class FavouriteScreen extends ElementaryWidget<FavouriteWM> {
       errorBuilder: (context, exception, data) => const ErrorScreen(),
       loadingBuilder: (context, data) => const LoadingScreen(),
       builder: (context, favourite) {
-        return Stack(
-          children: [
-            ListView.builder(
-              itemBuilder: (context, index) {
-                final stock = favourite![index];
-                return StockCard(
-                  stock: stock,
-                  onFavouriteTaped: () {
-                    wm.tapOnFavourite(stock);
-                  },
-                  isFavourite: favourite.any((element) => element.symbol == stock.symbol),
-                );
-              },
-              itemCount: favourite!.length,
-            ),
-          ],
+        return RefreshIndicator(
+          onRefresh: () => wm.refresh(),
+          child: Stack(
+            children: [
+              ListView.builder(
+                itemBuilder: (context, index) {
+                  final stock = favourite![index];
+                  return StockCard(
+                    stock: stock,
+                    onFavouriteTaped: () {
+                      wm.tapOnFavourite(stock);
+                    },
+                    isFavourite: favourite.any((element) => element.symbol == stock.symbol),
+                  );
+                },
+                itemCount: favourite!.length,
+              ),
+            ],
+          ),
         );
       },
     );

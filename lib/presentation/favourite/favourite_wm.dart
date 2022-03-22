@@ -39,6 +39,19 @@ class FavouriteWM extends WidgetModel<FavouriteScreen, FavouriteModel> {
     context.read<FavouriteRepository>().removeListener(() async => await _loadFavourite());
   }
 
+  Future<void> tapOnFavourite(Stock stock) async {
+    if (model.favourite.any((element) => element.symbol == stock.symbol)) {
+      await model.removeFromFavourite(stock);
+    } else {
+      await model.addToFavourite(stock);
+    }
+    _favourite.content(model.favourite);
+  }
+
+  Future<void> refresh() async {
+    return _loadFavourite();
+  }
+
   Future<void> _loadFavourite() async {
     final previousFavourite = _favourite.value?.data;
     _favourite.loading(previousFavourite);
@@ -48,15 +61,6 @@ class FavouriteWM extends WidgetModel<FavouriteScreen, FavouriteModel> {
     } on Exception catch (e) {
       _favourite.error(e, previousFavourite);
     }
-  }
-
-  Future<void> tapOnFavourite(Stock stock) async {
-    if (model.favourite.any((element) => element.symbol == stock.symbol)) {
-      await model.removeFromFavourite(stock);
-    } else {
-      await model.addToFavourite(stock);
-    }
-    _favourite.content(model.favourite);
   }
 
   ListenableState<EntityState<List<Stock>>> get favourite => _favourite;
