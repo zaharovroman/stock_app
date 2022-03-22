@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:stock_app/app_provider.dart';
-import 'package:stock_app/presentation/home/home_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+import 'package:stock_app/app_provider.dart';
+import 'package:stock_app/data/dto/favourite_stock_dto.dart';
+import 'package:stock_app/data/repository/boxes.dart';
+import 'package:stock_app/presentation/app/app.dart';
+
+import 'data/repository/favourite_repository/favourite_repository_box.dart';
+
+void main() async {
+  await FavouriteRepositoryBox.init();
   runApp(
     const AppProvider(
       child: MyApp(),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      home: const HomeScreen(),
-    );
-  }
 }
